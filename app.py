@@ -11,15 +11,23 @@ MODEL_URL = "https://huggingface.co/lalith-001/image-compression-model/resolve/m
 MODEL_PATH = "ae_ld1536_fp16.weights.h5"
 
 
+import requests
+import os
+
 def download_weights():
 
     if not os.path.exists(MODEL_PATH):
 
         st.write("Downloading model weights...")
-        r = requests.get(MODEL_URL, stream=True)
+
+        response = requests.get(MODEL_URL, stream=True)
+
+        response.raise_for_status()
+
+        total = int(response.headers.get("content-length", 0))
 
         with open(MODEL_PATH, "wb") as f:
-            for chunk in r.iter_content(chunk_size=8192):
+            for chunk in response.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
 
