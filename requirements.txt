@@ -1,7 +1,5 @@
 streamlit
-tensorflow
+tensorflow-cpu==2.15.1
 numpy
 pillow
-matplotlib
-opencv-python-headless
-scikit-image
+requests
