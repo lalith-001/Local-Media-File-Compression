@@ -8,31 +8,30 @@ import requests
 import os
 
 MODEL_URL = "https://huggingface.co/lalith-001/image-compression-model/resolve/main/ae_ld1536_fp16.weights.h5"
-MODEL_PATH = "ae_ld1536_fp16.weights.h5"
-
-
-import requests
-import os
+MODEL_PATH = "ae_ld1536_v2.weights.h5"
+EXPECTED_SIZE = 459000000   
 
 def download_weights():
 
-    if not os.path.exists(MODEL_PATH):
+    if os.path.exists(MODEL_PATH):
+        size = os.path.getsize(MODEL_PATH)
 
-        st.write("Downloading model weights...")
+        if size > EXPECTED_SIZE * 0.9:
+            return
 
-        response = requests.get(MODEL_URL, stream=True)
+        else:
+            os.remove(MODEL_PATH)
 
-        response.raise_for_status()
+    st.write("Downloading model weights...")
 
-        total = int(response.headers.get("content-length", 0))
+    response = requests.get(MODEL_URL, stream=True)
 
-        with open(MODEL_PATH, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
+    with open(MODEL_PATH, "wb") as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
 
-        st.write("Download complete.")
-
+    st.write("Download complete.")
 
 
 def residual_block(x, filters):
