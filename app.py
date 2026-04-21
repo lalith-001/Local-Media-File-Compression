@@ -78,7 +78,6 @@ class ConvAutoencoder(keras.Model):
 @st.cache_resource
 def load_model():
 
-    download_weights()
 
     model = ConvAutoencoder(latent_dim=1536)
     dummy = tf.zeros((1,128,128,3))
