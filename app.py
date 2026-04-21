@@ -7,31 +7,6 @@ from PIL import Image
 import requests
 import os
 
-MODEL_URL = "https://huggingface.co/lalith-001/image-compression-model/resolve/main/ae_ld1536_fp16.weights.h5"
-MODEL_PATH = "ae_ld1536_v2.weights.h5"
-EXPECTED_SIZE = 459000000   
-
-def download_weights():
-
-    if os.path.exists(MODEL_PATH):
-        size = os.path.getsize(MODEL_PATH)
-
-        if size > EXPECTED_SIZE * 0.9:
-            return
-
-        else:
-            os.remove(MODEL_PATH)
-
-    st.write("Downloading model weights...")
-
-    response = requests.get(MODEL_URL, stream=True)
-
-    with open(MODEL_PATH, "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            if chunk:
-                f.write(chunk)
-
-    st.write("Download complete.")
 
 
 def residual_block(x, filters):
@@ -109,7 +84,7 @@ def load_model():
     dummy = tf.zeros((1,128,128,3))
     model(dummy)
 
-    model.load_weights(MODEL_PATH)
+    model.load_weights("model/ae_ld1536_fp16.weights.h5")
 
     return model
 
